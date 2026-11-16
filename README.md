@@ -2,7 +2,7 @@
 
 Whatever you're playing, hanging off the top of your screen, with a tiny face that watches you.
 
-A black island sits on the top edge of Windows. Hit play in Spotify, YouTube in any Chromium browser or Firefox, Apple Music, TIDAL, Windows Media Player, anything that shows up in Windows' media controls, and it drops in: the cover on one side, the beat on the other, and in the middle a little pet whose eyes follow your cursor around the screen. It blinks, bobs on the beat, blushes when you hover and dozes off when you pause. Click it and it springs open into a full player: previous, pause, next, and a glowing scrubber you can drag. Behind it all, an aurora takes its colours from the album cover and listens to the actual sound, so every kick drum is a flash of light.
+A black island sits on the top edge of Windows. Hit play in Spotify, YouTube in any Chromium browser or Firefox, Apple Music, TIDAL, Windows Media Player, anything that shows up in Windows' media controls, and a tiny bubble drops in with a face. Its eyes follow your cursor around the screen. It blinks, bobs on the beat, squeezes its eyes happy when you hover and dozes off when you pause. Click it and it springs open into a full player: previous, pause, next, and a glowing scrubber you can drag. Behind it all, an aurora takes its colours from the album cover and listens to the actual sound, so every kick drum is a flash of light.
 
 Nothing playing? It tucks itself away. It bloops when it opens. Nobody asked for that, and it's the best part.
 

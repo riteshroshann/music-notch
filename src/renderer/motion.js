@@ -111,5 +111,38 @@ const Motion = (() => {
     );
   }
 
-  return { morph, page, intro, press, grow, spring };
+  /** A soft jelly wobble, like poking a bubble. @param {HTMLElement} el @param {number} [amp] */
+  function jelly(el, amp = 1) {
+    if (reduced) return;
+    for (const a of el.getAnimations()) if (a.id === "jelly") a.cancel();
+    const k = (/** @type {number} */ v) => String(1 + (v - 1) * amp);
+    const a = el.animate(
+      [
+        { scale: "1 1" },
+        { scale: `${k(1.07)} ${k(0.93)}` },
+        { scale: `${k(0.96)} ${k(1.05)}` },
+        { scale: `${k(1.025)} ${k(0.985)}` },
+        { scale: `${k(0.995)} ${k(1.005)}` },
+        { scale: "1 1" },
+      ],
+      { duration: 620, easing: "cubic-bezier(.25,.9,.3,1)" },
+    );
+    a.id = "jelly";
+  }
+
+  /** Something new arrived: rise in from a soft blur. @param {Element[]} nodes */
+  function pop(nodes) {
+    if (reduced) return;
+    nodes.forEach((n, i) =>
+      n.animate(
+        [
+          { opacity: 0.2, scale: "0.9", filter: "blur(6px)", translate: "0 6px" },
+          { opacity: 1, scale: "1", filter: "blur(0)", translate: "0 0" },
+        ],
+        { duration: bouncy.duration, easing: bouncy.easing, delay: i * 50 },
+      ),
+    );
+  }
+
+  return { morph, page, intro, press, grow, spring, jelly, pop };
 })();

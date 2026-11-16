@@ -10,6 +10,7 @@ const Pet = (() => {
   let cursor = null;
   let ex = 0;
   let ey = 0;
+  let nearS = 0;
   let blinkAt = -1e9;
   let nextBlink = 1200;
   let double = false;
@@ -40,11 +41,17 @@ const Pet = (() => {
 
     let tx = 0;
     let ty = 0;
+    let near = 0;
     if (cursor) {
       const r = face.getBoundingClientRect();
-      tx = clamp((cursor.x - (r.left + r.width / 2)) / 160) * 3.6;
-      ty = clamp((cursor.y - (r.top + r.height / 2)) / 110) * 2.2;
+      const dx = cursor.x - (r.left + r.width / 2);
+      const dy = cursor.y - (r.top + r.height / 2);
+      tx = clamp(dx / 160) * 3.6;
+      ty = clamp(dy / 110) * 2.2;
+      near = Math.max(0, 1 - Math.hypot(dx, dy) / 140); // perk up as the cursor comes close
     }
+    nearS += (near - nearS) * 0.12;
+    face.style.setProperty("--near", nearS.toFixed(3));
     ex += (tx - ex) * 0.16;
     ey += (ty - ey) * 0.16;
     face.style.setProperty("--ex", `${ex.toFixed(2)}px`);

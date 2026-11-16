@@ -284,11 +284,16 @@ track.addEventListener("keydown", (e) => {
 island.addEventListener("pointerenter", () => {
   if (!isOpen) {
     Motion.press(shell, 1.035);
+    Motion.jelly(island, 0.7);
     Sound.play("hover");
   }
 });
 island.addEventListener("pointerleave", () => Motion.press(shell, 1));
-island.addEventListener("pointerdown", () => !isOpen && Motion.press(shell, 0.97));
+island.addEventListener("pointerdown", () => {
+  if (isOpen) return;
+  Motion.press(shell, 0.97);
+  Pet.mood("happy", 450);
+});
 island.addEventListener("pointerup", () => Motion.press(shell, 1));
 document.addEventListener("pointermove", (e) => {
   bridge.hover(Boolean(/** @type {HTMLElement} */ (e.target).closest(".island")));
@@ -320,7 +325,11 @@ function render(s) {
     return;
   }
   if (!prev && !params.has("shot")) Motion.intro([shell]);
-  if (prev && keyOf(prev) !== keyOf(s)) Pet.mood("wow", 900);
+  if (prev && keyOf(prev) !== keyOf(s)) {
+    Pet.mood("wow", 900);
+    Motion.jelly(island, 0.6);
+    Motion.pop([$("artLg"), $("title"), $("artist")]);
+  }
   island.classList.toggle("playing", s.playing);
   $("play").setAttribute("aria-label", s.playing ? "Pause" : "Play");
   $("title").textContent = s.title;
@@ -341,7 +350,6 @@ bridge.on("media", render);
 /** @param {{ key: string, src: string | null }} a */
 function setArt(a) {
   const css = a.src ? `url("${a.src.replace(/"/g, "%22")}")` : "";
-  $("artSm").style.backgroundImage = css;
   $("artLg").style.backgroundImage = css;
   $("artLg").style.setProperty("--cover", css || "none");
   Aurora.paletteFrom(a.src);
@@ -411,17 +419,20 @@ function updateLines() {
     }
   };
   if (first) return show();
-  box.classList.add("swap");
+  // old line drifts up and out, the new one rises in from below
+  box.classList.add("out");
   setTimeout(() => {
     show();
-    box.classList.remove("swap");
-  }, 170);
+    box.classList.remove("out");
+    box.classList.add("in");
+    box.getBoundingClientRect();
+    box.classList.remove("in");
+  }, 190);
   if (cur) Aurora.wave();
 }
 
 // ---------- frame loop ----------
 const bloom = /** @type {HTMLCanvasElement} */ ($("bloom"));
-const bars = /** @type {HTMLElement[]} */ ([...document.querySelectorAll(".eq i")]);
 let openLevel = 0;
 let lastAccent = "";
 
@@ -443,14 +454,10 @@ function frame(t) {
     document.documentElement.style.setProperty("--accent", accent);
     lastAccent = accent;
   }
-  bars.forEach((b, i) => {
-    const v = playing ? 0.22 + Math.min(0.78, (ears.bands[i] ?? 0) * 1.6 + ears.beat * 0.25) : 0.16;
-    b.style.transform = `scaleY(${v.toFixed(3)})`;
-  });
-
   const p = dragRatio !== null && now.duration ? dragRatio * now.duration : position();
   if (isOpen && now.duration) {
     track.style.setProperty("--p", (p / now.duration).toFixed(4));
+    track.style.setProperty("--glow", (playing ? Math.min(1, ears.beat * 0.8 + ears.bass * 0.6) : 0).toFixed(3));
     track.setAttribute("aria-valuenow", String(Math.round((p / now.duration) * 100)));
     const txt = fmtTime(p);
     if ($("tNow").textContent !== txt) $("tNow").textContent = txt;
