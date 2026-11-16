@@ -31,10 +31,16 @@ function Emit($obj) {
 }
 
 # A playing session wins over the one Windows calls current, so a paused tab can't hide Spotify.
+# With several playing, Windows' current one wins, then a music app over a browser tab.
+$Browsers = 'chrome|msedge|brave|opera|vivaldi|firefox|308046B0AF4A39CB|arc'
 function Pick {
-  $playing = $manager.GetSessions() | Where-Object { $_.GetPlaybackInfo().PlaybackStatus -eq 'Playing' } | Select-Object -First 1
-  if ($playing) { return $playing }
-  $manager.GetCurrentSession()
+  $current = $manager.GetCurrentSession()
+  $playing = @($manager.GetSessions() | Where-Object { $_.GetPlaybackInfo().PlaybackStatus -eq 'Playing' })
+  if ($playing.Count -eq 0) { return $current }
+  if ($current -and ($playing | Where-Object { $_.SourceAppUserModelId -eq $current.SourceAppUserModelId })) { return $current }
+  $app = $playing | Where-Object { $_.SourceAppUserModelId -notmatch $Browsers } | Select-Object -First 1
+  if ($app) { return $app }
+  $playing[0]
 }
 
 function Art($props) {

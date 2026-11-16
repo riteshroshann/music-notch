@@ -1,7 +1,7 @@
 {
   "name": "music-notch",
   "productName": "Music Notch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Whatever you're playing, hanging from the top of your screen, with an aurora that dances to it.",
   "author": "Ritesh Roshan <riteshroshansahoo01@gmail.com>",
   "license": "MIT",
@@ -28,7 +28,7 @@
       "include": "build/installer.nsh",
       "shortcutName": "Music Notch",
       "uninstallDisplayName": "Music Notch",
-      "createDesktopShortcut": false,
+      "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     },
     "publish": [{ "provider": "github", "owner": "riteshroshann", "repo": "music-notch" }]

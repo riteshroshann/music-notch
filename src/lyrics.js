@@ -81,8 +81,33 @@ async function get(url) {
 }
 
 /**
+ * Plain lyrics with no timestamps: spread the lines over the song, skipping a short intro and
+ * outro and giving longer lines more time. Close enough to sing along; marked as estimated.
+ * @param {string} plain @param {number} durationMs @returns {Line[] | null}
+ */
+function estimate(plain, durationMs) {
+  const texts = plain
+    .split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter((s) => s && !/^\[.*\]$/.test(s));
+  if (!texts.length || durationMs < 30000) return null;
+  const start = Math.min(15000, durationMs * 0.08);
+  const span = durationMs * 0.92 - start;
+  const weights = texts.map((t) => 4 + t.length);
+  const total = weights.reduce((a, b) => a + b, 0);
+  let at = start;
+  return texts.map((text, i) => {
+    const line = { t: Math.round(at), text };
+    at += (span * /** @type {number} */ (weights[i])) / total;
+    return line;
+  });
+}
+
+/**
+ * Exact match first, then searches that loosen step by step: first artist, then the full
+ * artist string, then free text. Synced lyrics win; plain ones are timed by estimate.
  * @param {{ title: string, artist: string, album?: string, duration?: number }} track duration in ms
- * @returns {Promise<{ lines: Line[] | null, plain: string | null }>}
+ * @returns {Promise<{ lines: Line[] | null, plain: string | null, estimated: boolean }>}
  */
 async function fetchLyrics(track) {
   const title = cleanTitle(track.title);
@@ -92,12 +117,22 @@ async function fetchLyrics(track) {
   if (track.album) q.set("album_name", track.album);
   if (durationS) q.set("duration", String(durationS));
   let hit = await get(`${API}/get?${q}`).catch(() => null);
-  if (!hit?.syncedLyrics) {
-    const found = await get(`${API}/search?${new URLSearchParams({ track_name: title, artist_name: artist })}`);
-    hit = pick(Array.isArray(found) ? found : [], durationS) ?? hit;
+  const searches = [
+    { track_name: title, artist_name: artist },
+    { track_name: title, artist_name: track.artist },
+    { q: `${title} ${artist}` },
+  ];
+  for (const s of searches) {
+    if (hit?.syncedLyrics) break;
+    const found = await get(`${API}/search?${new URLSearchParams(s)}`).catch(() => null);
+    const better = pick(Array.isArray(found) ? found : [], durationS);
+    if (better && (better.syncedLyrics || !hit)) hit = better;
   }
-  if (!hit || hit.instrumental) return { lines: null, plain: null };
-  return { lines: hit.syncedLyrics ? parseLrc(hit.syncedLyrics) : null, plain: hit.plainLyrics ?? null };
+  if (!hit || hit.instrumental) return { lines: null, plain: null, estimated: false };
+  if (hit.syncedLyrics) return { lines: parseLrc(hit.syncedLyrics), plain: hit.plainLyrics ?? null, estimated: false };
+  const plain = hit.plainLyrics ?? null;
+  const lines = plain ? estimate(plain, track.duration ?? (hit.duration ?? 0) * 1000) : null;
+  return { lines, plain, estimated: Boolean(lines) };
 }
 
-module.exports = { parseLrc, lineAt, cleanTitle, firstArtist, pick, fetchLyrics };
+module.exports = { parseLrc, lineAt, cleanTitle, firstArtist, pick, estimate, fetchLyrics };

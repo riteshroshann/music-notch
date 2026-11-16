@@ -20,16 +20,16 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="site.css?v=1">
+<link rel="stylesheet" href="site.css?v=2">
 <style>
-  .stage { height: calc(440px * var(--k, 1) + 40px); }
-  .stage iframe { width: 900px; height: 440px; }
+  .stage { height: calc(340px * var(--k, 1) + 40px); }
+  .stage iframe { width: 820px; height: 340px; }
 </style>
 </head>
 <body>
 
 <div class="stage" id="stage">
-  <iframe src="demo/index.html?demo&v=1" title="Live Music Notch demo with made-up songs" loading="eager"></iframe>
+  <iframe src="demo/index.html?demo&v=2" title="Live Music Notch demo with made-up songs" loading="eager"></iframe>
   <p class="stage-hint">This is the real player running on made-up songs. Skip, scrub, pause. Turn your sound on.</p>
 </div>
 
@@ -50,7 +50,7 @@
   <section aria-labelledby="what">
     <h2 id="what">What it does</h2>
     <div class="islands">
-      <div><b>Knows the song</b><p>Spotify, YouTube in any browser, Apple Music, TIDAL, VLC: anything that shows up in Windows' own media controls shows up here, with its cover art. Nothing playing? The island tucks itself away.</p></div>
+      <div><b>Knows the song</b><p>Spotify, YouTube in Chrome, Edge, Brave or Firefox, Apple Music, TIDAL, Windows Media Player: anything that shows up in Windows' own media controls shows up here, with its cover art. Nothing playing? The island tucks itself away.</p></div>
       <div><b>Plays along</b><p>Click it and it springs open into a full player: previous, pause, next, and a glowing scrubber you can drag. Space, left and right arrows work too.</p></div>
       <div><b>Sings and glows</b><p>Synced lyrics roll through the notch line by line. The aurora takes its colours from the cover and listens to the actual sound, so the bass hits are light hits.</p></div>
     </div>
@@ -90,9 +90,9 @@
 </main>
 
 <script>
-  // Scale the 900px widget down to fit narrow screens.
+  // Scale the 820px widget down to fit narrow screens.
   const stage = document.getElementById("stage");
-  const fit = () => stage.style.setProperty("--k", Math.min(1, stage.clientWidth / 900).toFixed(3));
+  const fit = () => stage.style.setProperty("--k", Math.min(1, stage.clientWidth / 820).toFixed(3));
   addEventListener("resize", fit);
   fit();
 </script>

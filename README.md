@@ -2,7 +2,7 @@
 
 Whatever you're playing, hanging off the top of your screen, glowing to the beat.
 
-A black island sits on the top edge of Windows. Hit play in Spotify, YouTube, Apple Music, TIDAL, VLC, anything that shows up in Windows' media controls, and it drops in with the cover art and the line being sung right now. Click it and it springs open into a full player: previous, pause, next, and a glowing scrubber you can drag. Behind it all, an aurora takes its colours from the album cover and listens to the actual sound, so every kick drum is a flash of light.
+A black island sits on the top edge of Windows. Hit play in Spotify, YouTube in any Chromium browser or Firefox, Apple Music, TIDAL, Windows Media Player, anything that shows up in Windows' media controls, and it drops in with the cover art and the line being sung right now. Click it and it springs open into a full player: previous, pause, next, and a glowing scrubber you can drag. Behind it all, an aurora takes its colours from the album cover and listens to the actual sound, so every kick drum is a flash of light.
 
 Nothing playing? It tucks itself away. It bloops when it opens. Nobody asked for that, and it's the best part.
 
@@ -28,7 +28,7 @@ just player   # a fake music app for testing, no Spotify needed
 just dist     # installer + zip
 ```
 
-Plain JavaScript in one transparent Electron window. Now playing comes from Windows' own media session API through a tiny PowerShell sidecar, so there are no native modules to compile. The aurora hears your PC's sound through Chromium's loopback capture and an FFT; nothing is recorded. Synced lyrics come from [LRCLIB](https://lrclib.net), a free and open lyrics database, which gets the song's title, artist, album and length and nothing else. Turn lyrics off and the app never touches the network.
+Plain JavaScript in one transparent Electron window. Now playing comes from Windows' own media session API through a tiny PowerShell sidecar, so there are no native modules to compile. The aurora hears your PC's sound through Chromium's loopback capture and an FFT; nothing is recorded. Synced lyrics come from [LRCLIB](https://lrclib.net), a free and open lyrics database (when a song only has plain lyrics, they roll through on estimated timing), which gets the song's title, artist, album and length and nothing else. Turn lyrics off and the app never touches the network.
 
 [Privacy](https://riteshroshann.github.io/music-notch/privacy.html) · [Terms](https://riteshroshann.github.io/music-notch/terms.html) · MIT licensed. Not affiliated with Spotify or any other music service.
 

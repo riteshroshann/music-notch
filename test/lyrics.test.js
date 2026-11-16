@@ -53,3 +53,19 @@ describe("cleaning search terms", () => {
     expect(pick([{ duration: 400, syncedLyrics: "a" }], 160)).toBeNull();
   });
 });
+
+describe("estimate", () => {
+  const { estimate } = require("../src/lyrics.js");
+  test("spreads plain lines through the song, longer lines get longer", () => {
+    const lines = estimate("[Verse]\nshort\na much much longer line here\n\nend", 180000);
+    expect(lines?.map((l) => l.text)).toEqual(["short", "a much much longer line here", "end"]);
+    const [a, b, c] = /** @type {{ t: number }[]} */ (lines);
+    expect(a.t).toBe(14400);
+    expect(c.t - b.t).toBeGreaterThan(b.t - a.t);
+    expect(c.t).toBeLessThan(180000);
+  });
+  test("too short or empty gives nothing", () => {
+    expect(estimate("hi", 10000)).toBeNull();
+    expect(estimate("\n\n", 200000)).toBeNull();
+  });
+});
