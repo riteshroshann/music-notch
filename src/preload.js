@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const CHANNELS = new Set(["media", "art", "lyrics", "settings", "collapse", "open"]);
+const CHANNELS = new Set(["media", "art", "lyrics", "settings", "collapse", "open", "cursor"]);
 
 contextBridge.exposeInMainWorld("notch", {
   init: () => ipcRenderer.invoke("init"),

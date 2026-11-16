@@ -7,8 +7,8 @@ const { fetchLyrics } = require("./lyrics.js");
 const pkg = require("../package.json");
 
 // Wide and tall enough for the open island plus the aurora spilling out around it.
-const WIDTH = 820;
-const HEIGHT = 340;
+const WIDTH = 640;
+const HEIGHT = 280;
 const SITE = "https://riteshroshann.github.io/music-notch/";
 
 const arg = (/** @type {string} */ name) =>
@@ -275,9 +275,24 @@ app.whenReady().then(() => {
   if (tooling) return void (arg("live") && startMedia());
   buildTray();
   startMedia();
+  followCursor();
   screen.on("display-metrics-changed", () => {
     if (!alive(win)) return;
     const p = placement();
     win.setPosition(p.x, p.y);
   });
 });
+
+/** Tell the pet where the cursor is, in window pixels, whenever it moves and something is playing. */
+function followCursor() {
+  let last = "";
+  setInterval(() => {
+    if (!alive(win) || !now) return;
+    const p = screen.getCursorScreenPoint();
+    const b = win.getBounds();
+    const key = `${p.x - b.x},${p.y - b.y}`;
+    if (key === last) return;
+    last = key;
+    send("cursor", { x: p.x - b.x, y: p.y - b.y });
+  }, 33);
+}

@@ -10,5 +10,5 @@
       "suspicious": { "noAssignInExpressions": "off" }
     }
   },
-  "javascript": { "globals": ["Motion", "Sound", "Aurora", "Ears"] }
+  "javascript": { "globals": ["Motion", "Sound", "Aurora", "Ears", "Pet"] }
 }

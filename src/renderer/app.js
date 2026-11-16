@@ -1,5 +1,5 @@
 // Wires the now-playing feed, controls, lyrics and the aurora to the island.
-/* global Motion, Sound, Ears, Aurora */
+/* global Motion, Sound, Ears, Aurora, Pet */
 const $ = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.getElementById(id));
 const params = new URLSearchParams(location.search);
 
@@ -152,6 +152,7 @@ const bridge =
 
 // ---------- state ----------
 const island = $("np");
+const shell = $("shell");
 /** @type {Now | null} */
 let now = null;
 /** @type {Line[] | null} */
@@ -182,6 +183,7 @@ function setOpen(open) {
   if (open === isOpen) return;
   isOpen = open;
   Motion.morph(island, open);
+  shell.classList.toggle("open", open);
   island.setAttribute("aria-expanded", String(open));
   Sound.play(open ? "open" : "close");
   if (open) island.focus();
@@ -281,17 +283,24 @@ track.addEventListener("keydown", (e) => {
 // ---------- hover, press, click-through ----------
 island.addEventListener("pointerenter", () => {
   if (!isOpen) {
-    Motion.press(island, 1.035);
+    Motion.press(shell, 1.035);
     Sound.play("hover");
   }
 });
-island.addEventListener("pointerleave", () => Motion.press(island, 1));
-island.addEventListener("pointerdown", () => !isOpen && Motion.press(island, 0.97));
-island.addEventListener("pointerup", () => Motion.press(island, 1));
+island.addEventListener("pointerleave", () => Motion.press(shell, 1));
+island.addEventListener("pointerdown", () => !isOpen && Motion.press(shell, 0.97));
+island.addEventListener("pointerup", () => Motion.press(shell, 1));
 document.addEventListener("pointermove", (e) => {
   bridge.hover(Boolean(/** @type {HTMLElement} */ (e.target).closest(".island")));
 });
 document.addEventListener("pointerleave", () => bridge.hover(false));
+bridge.on("cursor", (/** @type {{ x: number, y: number }} */ c) => Pet.look(c.x, c.y));
+document.addEventListener("pointermove", (e) => Pet.look(e.clientX, e.clientY));
+// the website passes the page cursor in, so the demo pet watches you anywhere on the page
+addEventListener("message", (e) => {
+  const c = e.origin === location.origin ? e.data?.cursor : null;
+  if (Array.isArray(c)) Pet.look(c[0], c[1]);
+});
 document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   if (/** @type {HTMLElement} */ (e.target).closest(".island")) bridge.menu();
@@ -305,12 +314,13 @@ function render(s) {
   const prev = now;
   now = s;
   document.body.classList.toggle("idle", !s);
-  island.classList.toggle("idle", !s);
+  shell.classList.toggle("idle", !s);
   if (!s) {
     setOpen(false);
     return;
   }
-  if (!prev && !params.has("shot")) Motion.intro([island]);
+  if (!prev && !params.has("shot")) Motion.intro([shell]);
+  if (prev && keyOf(prev) !== keyOf(s)) Pet.mood("wow", 900);
   island.classList.toggle("playing", s.playing);
   $("play").setAttribute("aria-label", s.playing ? "Pause" : "Play");
   $("title").textContent = s.title;
@@ -378,7 +388,7 @@ function lineAt(ls, ms) {
   return found;
 }
 
-/** The chip shows the line being sung, or the song when nobody is singing. */
+/** The open player shows the line being sung and the next one; the chip stays a face. */
 function updateLines() {
   if (!now) return;
   const synced = settings.lyrics && lines && lyricKey === keyOf(now) ? lines : null;
@@ -389,14 +399,8 @@ function updateLines() {
   const cur = synced?.[idx]?.text ?? "";
   const nxt = synced?.slice(idx + 1).find((l) => l.text)?.text ?? "";
 
-  const chip = $("chipText");
-  const chipHtml = cur
-    ? esc(cur)
-    : `${esc(now.title)}${now.artist ? ` <span class="muted">${esc(now.artist)}</span>` : ""}`;
   const box = $("lyrics");
   const show = () => {
-    chip.innerHTML = chipHtml;
-    chip.classList.toggle("lyric", Boolean(cur));
     box.classList.toggle("plain", !synced);
     if (synced) {
       $("lyNow").textContent = cur || "♪";
@@ -407,18 +411,15 @@ function updateLines() {
     }
   };
   if (first) return show();
-  chip.classList.add("swap");
   box.classList.add("swap");
   setTimeout(() => {
     show();
-    chip.classList.remove("swap");
     box.classList.remove("swap");
   }, 170);
   if (cur) Aurora.wave();
 }
 
 // ---------- frame loop ----------
-const halo = /** @type {HTMLCanvasElement} */ ($("halo"));
 const bloom = /** @type {HTMLCanvasElement} */ ($("bloom"));
 const bars = /** @type {HTMLElement[]} */ ([...document.querySelectorAll(".eq i")]);
 let openLevel = 0;
@@ -434,7 +435,7 @@ function frame(t) {
   Aurora.blend();
 
   if (settings.aurora || isOpen) Aurora.bloom(bloom, ears, t, openLevel);
-  if (settings.aurora) Aurora.halo(halo, island.getBoundingClientRect(), ears, t, openLevel);
+  Pet.tick(t, ears, playing);
 
   const c = /** @type {number[]} */ (Aurora.colours()[0]);
   const accent = `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
@@ -470,7 +471,6 @@ requestAnimationFrame(frame);
 if (params.has("shot")) document.body.style.background = "linear-gradient(#26262b, #0f0f12)";
 if (params.has("demo")) {
   document.body.classList.add("demo");
-  setTimeout(() => !isOpen && setOpen(true), 1400);
 }
 
 /** Titles and lyrics come from other apps and the network; keep them as text. @param {string} s */

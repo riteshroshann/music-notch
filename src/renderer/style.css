@@ -30,21 +30,6 @@ body {
   user-select: none;
 }
 
-.halo {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  filter: blur(11px) saturate(1.4);
-  opacity: 1;
-  transition: opacity 600ms ease;
-}
-body.idle .halo,
-body.no-aurora .halo {
-  opacity: 0;
-}
-
 .bar {
   position: relative;
   display: flex;
@@ -67,20 +52,15 @@ body.no-aurora .halo {
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.38), inset 0 -1px 0 var(--hair);
   transform-origin: 50% 0;
   will-change: transform;
-  transition: border-radius 320ms cubic-bezier(0.2, 0.8, 0.2, 1), translate 520ms var(--spring, ease);
+  transition: border-radius 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .island:focus-visible {
   outline: 1.5px solid rgba(255, 255, 255, 0.3);
   outline-offset: 2px;
 }
 .island.open {
-  border-radius: 0 0 32px 32px;
+  border-radius: 0 0 34px 34px;
   cursor: default;
-}
-/* nothing playing: the island tucks itself away above the screen edge */
-.island.idle {
-  translate: 0 -130%;
-  pointer-events: none;
 }
 
 .bloom {
@@ -154,11 +134,12 @@ body.no-aurora .bloom {
 /* ---------- resting chip ---------- */
 .chip {
   height: var(--h);
-  width: 310px;
+  width: 198px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 14px 0 9px;
+  gap: 0;
+  padding: 0 12px 0 8px;
+  justify-content: space-between;
   font-size: 12.5px;
   font-weight: 600;
   white-space: nowrap;
@@ -174,29 +155,6 @@ body.no-aurora .bloom {
   width: 20px;
   height: 20px;
   border-radius: 6px;
-}
-.line {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
-  mask-image: linear-gradient(to right, #000 85%, transparent);
-}
-.line .txt {
-  display: inline-block;
-  transition: opacity 180ms ease, transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 180ms ease;
-}
-.line .txt.swap {
-  opacity: 0;
-  transform: translateY(6px);
-  filter: blur(3px);
-}
-.line .txt.lyric {
-  font-style: normal;
-}
-.line .muted {
-  color: var(--dim);
-  font-weight: 500;
 }
 .eq {
   flex: none;
@@ -473,12 +431,6 @@ body.demo .island {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 34px rgba(0, 0, 0, 0.38);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .halo {
-    filter: blur(20px);
-  }
-}
-
 /* the cover casts its own coloured light, like a sleeve held up to a lamp */
 .art.lg {
   position: relative;
@@ -512,4 +464,205 @@ body.demo .island {
 }
 .round.quit:hover svg {
   stroke: #ff6961;
+}
+
+/* ---------- the shell: island plus the two curves where it meets the screen edge ---------- */
+.shell {
+  position: relative;
+  display: flex;
+  transform-origin: 50% 0;
+  transition: translate 520ms var(--spring, ease);
+}
+/* nothing playing: everything tucks itself away above the screen edge */
+.shell.idle {
+  translate: 0 -130%;
+  pointer-events: none;
+}
+/* concave fillets, like a notch flowing out of the bezel */
+.ear {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  z-index: 2;
+  transition: width 420ms var(--spring, ease), height 420ms var(--spring, ease);
+}
+.ear.l {
+  right: 100%;
+  background: radial-gradient(circle farthest-side at 0 100%, transparent 97%, var(--panel) 100%);
+}
+.ear.r {
+  left: 100%;
+  background: radial-gradient(circle farthest-side at 100% 100%, transparent 97%, var(--panel) 100%);
+}
+.shell.open .ear {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- the pet: a tiny face that lives in the notch ---------- */
+.pet {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+.face {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  height: 22px;
+  translate: var(--fx, 0) var(--fy, 0);
+  animation: breathe 3.2s ease-in-out infinite;
+}
+@keyframes breathe {
+  50% {
+    scale: 1.035;
+  }
+}
+.eye {
+  width: 8px;
+  height: 12px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+  translate: var(--ex, 0) var(--ey, 0);
+  scale: 1 var(--lid, 1);
+  transition:
+    scale 90ms ease-in, height 260ms var(--spring, ease), width 260ms var(--spring, ease),
+    border-radius 260ms ease, background 200ms ease, border-color 200ms ease;
+}
+.mouth {
+  position: absolute;
+  left: 50%;
+  top: 17px;
+  width: 6px;
+  height: 3px;
+  margin-left: -3px;
+  border: 1.6px solid #fff;
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  opacity: 0.85;
+  translate: var(--ex, 0) 0;
+  transition: all 260ms var(--spring, ease);
+}
+.cheek {
+  position: absolute;
+  top: 15px;
+  width: 6px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ff7aa8;
+  filter: blur(0.6px);
+  opacity: 0;
+  scale: 0.4;
+  transition: opacity 220ms ease, scale 320ms var(--spring, ease);
+}
+.cheek.l {
+  left: -7px;
+}
+.cheek.r {
+  right: -7px;
+}
+.zz {
+  position: absolute;
+  right: 18px;
+  top: 2px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--dim);
+  opacity: 0;
+}
+
+/* happy on hover: eyes turn into little arcs, cheeks blush, it hops */
+.island:hover .pet .eye,
+.pet.happy .eye {
+  height: 6px;
+  width: 9px;
+  background: transparent;
+  border: 2.2px solid #fff;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+  box-shadow: none;
+}
+.island:hover .cheek,
+.pet.happy .cheek {
+  opacity: 0.9;
+  scale: 1;
+}
+.island:hover .mouth {
+  width: 8px;
+  height: 4px;
+  margin-left: -4px;
+}
+.island:hover .face {
+  animation: hop 1.4s var(--spring, ease) infinite;
+}
+@keyframes hop {
+  0%,
+  60%,
+  100% {
+    transform: none;
+  }
+  20% {
+    transform: translateY(-2px) scale(1.04, 0.96);
+  }
+  35% {
+    transform: translateY(0) scale(0.97, 1.03);
+  }
+}
+
+/* paused: sleepy slits and a drifting z */
+.pet.sleepy .eye {
+  height: 2.4px;
+  border-radius: 2px;
+  box-shadow: none;
+}
+.pet.sleepy .mouth {
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  border: 1.4px solid #fff;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+.pet.sleepy .zz {
+  animation: snooze 2.6s ease-in-out infinite;
+}
+@keyframes snooze {
+  0% {
+    opacity: 0;
+    transform: translate(0, 4px) scale(0.6);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(6px, -8px) scale(1.1);
+  }
+}
+
+/* a new song: wide eyes and a little "o" */
+.pet.wow .eye {
+  width: 10px;
+  height: 13px;
+  border-radius: 50%;
+}
+.pet.wow .mouth {
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border: 1.6px solid #fff;
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .face,
+  .island:hover .face,
+  .pet.sleepy .zz {
+    animation: none;
+  }
 }

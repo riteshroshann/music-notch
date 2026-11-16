@@ -1,6 +1,5 @@
-// The aurora. Two canvases share one palette and one pulse:
-//   bloom: inside the island, light rising from the bottom edge in the album's colours
-//   halo:  outside it, curtains of light hanging around the notch, swaying to the music
+// The aurora, drawn inside the island only: light rising from the bottom edge in the cover's
+// colours, with curtains of rays that grow with the music.
 // Colours come from the cover art; sizes and brightness come from Ears; lyric lines send a wave.
 const Aurora = (() => {
   /** @typedef {[number, number, number]} RGB */
@@ -169,55 +168,26 @@ const Aurora = (() => {
       g.fillStyle = grad;
       g.fillRect(0, 0, w, h);
     }
-  }
 
-  /**
-   * Curtains of light hanging around the island, tallest where the music is loudest.
-   * @param {HTMLCanvasElement} cv @param {DOMRect} island @param {ReturnType<typeof Ears.read>} ears @param {number} t @param {number} level
-   */
-  function halo(cv, island, ears, t, level) {
-    const g = cv.getContext("2d");
-    if (!g) return;
-    const w = cv.clientWidth;
-    const h = cv.clientHeight;
-    if (cv.width !== w || cv.height !== h) {
-      cv.width = w;
-      cv.height = h;
-    }
-    g.setTransform(1, 0, 0, 1, 0, 0);
-    g.clearRect(0, 0, w, h);
-    if (island.width < 4) return;
-    g.globalCompositeOperation = "lighter";
-    const spread = 46 + 40 * level;
-    const left = island.left - spread;
-    const right = island.right + spread;
-    const since = t - waveAt;
-    const waveX = since < 1400 ? island.left - 100 + (since / 1400) * (island.width + 200) : -1e4;
-    const loud = 0.35 + ears.energy * 1.4 + ears.beat * 0.45;
+    // curtains rising from the bottom edge, tallest where the music is loudest
+    const loud = 0.3 + ears.energy * 1.3 + ears.beat * 0.4;
     const step = 3;
-    for (let x = left; x <= right; x += step) {
-      const inside = x >= island.left && x <= island.right;
-      const out = inside ? 0 : x < island.left ? island.left - x : x - island.right;
-      const fade = Math.exp(-((out / spread) ** 2) * 2.2);
-      const u = (x - island.left) / Math.max(1, island.width);
-      const bandIdx = Math.min(4, Math.max(0, Math.floor(u * 5)));
+    g.filter = "blur(5px)";
+    for (let x = -6; x <= w + 6; x += step) {
       const n = field(x, t) * rays(x, t);
-      const wv = waveX > -1e3 ? Math.exp(-(((x - waveX) / 70) ** 2)) : 0;
-      const len = (26 + 120 * n * loud + 70 * (ears.bands[bandIdx] ?? 0) + 60 * wv) * (0.55 + 0.45 * level);
-      // hang from the bottom edge; beside the island, start lower so the sides glow without pillars
-      const top = Math.max(0, island.bottom - 18 - (inside ? 0 : island.height * 0.35 * fade));
-      const bottom = island.bottom + len;
-      const ci = Math.floor(((x * 0.004 + t * 0.00007) % 3) + 3) % 3;
-      const c = /** @type {RGB} */ (colour[ci]);
-      const a = (0.1 + 0.42 * n * loud + 0.3 * wv) * fade;
-      const grad = g.createLinearGradient(0, top, 0, bottom);
-      grad.addColorStop(0, rgba(c, 0));
-      grad.addColorStop(Math.min(0.9, (island.bottom - top) / Math.max(1, bottom - top)), rgba(c, a));
+      const band = ears.bands[Math.min(4, Math.max(0, Math.floor((x / w) * 5)))] ?? 0;
+      const wv = waveX > -1e3 ? Math.exp(-(((x - waveX) / 60) ** 2)) : 0;
+      const len = h * (0.18 + 0.5 * n * loud + 0.35 * band + 0.3 * wv) * (0.6 + 0.4 * level);
+      const c = /** @type {RGB} */ (colour[Math.floor(((x * 0.004 + t * 0.00007) % 3) + 3) % 3]);
+      const a = (0.08 + 0.38 * n * loud + 0.3 * wv) * (0.45 + 0.55 * level);
+      const grad = g.createLinearGradient(0, h, 0, h - len);
+      grad.addColorStop(0, rgba(c, a));
       grad.addColorStop(1, rgba(c, 0));
       g.fillStyle = grad;
-      g.fillRect(x, top, step + 1, bottom - top);
+      g.fillRect(x, h - len, step + 1, len);
     }
+    g.filter = "none";
   }
 
-  return { paletteFrom, wave, bloom, halo, blend, colours: () => colour };
+  return { paletteFrom, wave, bloom, blend, colours: () => colour };
 })();
