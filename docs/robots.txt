@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://riteshroshann.github.io/music-notch/sitemap.xml

@@ -1,0 +1,44 @@
+{
+  "name": "music-notch",
+  "productName": "Music Notch",
+  "version": "1.0.0",
+  "description": "Whatever you're playing, hanging from the top of your screen, with an aurora that dances to it.",
+  "author": "Ritesh Roshan <riteshroshansahoo01@gmail.com>",
+  "license": "MIT",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron scripts/dist.js"
+  },
+  "build": {
+    "appId": "com.riteshroshann.musicnotch",
+    "productName": "Music Notch",
+    "icon": "build/icon.png",
+    "files": ["src/**/*", "build/icon.png", "package.json"],
+    "asarUnpack": ["src/media.ps1"],
+    "win": {
+      "target": ["nsis", "zip"],
+      "artifactName": "Music-Notch-${os}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": true,
+      "include": "build/installer.nsh",
+      "shortcutName": "Music Notch",
+      "uninstallDisplayName": "Music Notch",
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true
+    },
+    "publish": [{ "provider": "github", "owner": "riteshroshann", "repo": "music-notch" }]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "1.1.13",
+    "@types/node": "22.9.0",
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8",
+    "typescript": "5.6.3"
+  }
+}

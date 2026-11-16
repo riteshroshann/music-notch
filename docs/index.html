@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Music Notch</title>
+<meta name="description" content="Whatever you're playing, hanging from the top of your Windows screen: controls, synced lyrics, and an aurora that moves to the beat. Free and open source.">
+<meta name="author" content="Ritesh Roshan">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://riteshroshann.github.io/music-notch/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:title" content="Music Notch">
+<meta property="og:description" content="Whatever you're playing, hanging from the top of your Windows screen, with an aurora that moves to the beat.">
+<meta property="og:image" content="https://riteshroshann.github.io/music-notch/og.png">
+<meta property="og:url" content="https://riteshroshann.github.io/music-notch/">
+<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; frame-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="site.css?v=1">
+<style>
+  .stage { height: calc(440px * var(--k, 1) + 40px); }
+  .stage iframe { width: 900px; height: 440px; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <iframe src="demo/index.html?demo&v=1" title="Live Music Notch demo with made-up songs" loading="eager"></iframe>
+  <p class="stage-hint">This is the real player running on made-up songs. Skip, scrub, pause. Turn your sound on.</p>
+</div>
+
+<main class="wrap">
+  <header class="hero">
+    <h1>Whatever you're playing, hanging from the top of your screen.</h1>
+    <p class="lede">A black island that knows the song, sings along with the lyrics, and glows in the colours of the cover, pulsing on every beat.</p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.exe">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L4.8 10.2a1 1 0 1 1 1.4-1.4L9 11.6V3a1 1 0 0 1 1-1ZM3 16a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Z"/></svg>
+        Download for Windows
+      </a>
+      <a class="btn ghost" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.zip">Portable zip</a>
+    </div>
+    <p class="fine">Windows 10 and 11 · free and open source · <a href="https://github.com/riteshroshann/music-notch">source on GitHub</a></p>
+  </header>
+
+  <section aria-labelledby="what">
+    <h2 id="what">What it does</h2>
+    <div class="islands">
+      <div><b>Knows the song</b><p>Spotify, YouTube in any browser, Apple Music, TIDAL, VLC: anything that shows up in Windows' own media controls shows up here, with its cover art. Nothing playing? The island tucks itself away.</p></div>
+      <div><b>Plays along</b><p>Click it and it springs open into a full player: previous, pause, next, and a glowing scrubber you can drag. Space, left and right arrows work too.</p></div>
+      <div><b>Sings and glows</b><p>Synced lyrics roll through the notch line by line. The aurora takes its colours from the cover and listens to the actual sound, so the bass hits are light hits.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="setup">
+    <h2 id="setup">Set it up in thirty seconds</h2>
+    <ol class="steps">
+      <li><div><b>Install</b><p>Run <code>Music-Notch-win.exe</code>. It installs for you alone, needs no admin rights, and starts straight away. Windows may say it protected your PC, because the app isn't code-signed yet. Click <b>More info</b>, then <b>Run anyway</b>.</p></div></li>
+      <li><div><b>Play something</b><p>Hit play in Spotify, or anywhere else. The island drops in from the top of the screen. There's no sign in and nothing to configure.</p></div></li>
+      <li><div><b>Make it yours</b><p>Right-click the island, or the tray icon, to turn the aurora, lyrics, sounds or start-at-login on and off.</p></div></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="remove">
+    <h2 id="remove">Uninstall</h2>
+    <p class="dim">Open <b>Settings</b>, then <b>Apps</b>, then <b>Installed apps</b>, find <b>Music Notch</b> and choose <b>Uninstall</b>. <b>Uninstall…</b> in the right-click menu takes you straight there. It quits the app and removes it, its start-at-login entry and your settings.</p>
+    <p class="dim">Using the portable zip? Right-click the island, turn off <b>Open at login</b>, quit, then delete the folder.</p>
+  </section>
+
+  <section aria-labelledby="it">
+    <h2 id="it">For IT teams</h2>
+    <p class="dim">Install and remove silently, per user:</p>
+<pre><code>Music-Notch-win.exe /S
+"%LOCALAPPDATA%\Programs\music-notch\Uninstall Music Notch.exe" /S</code></pre>
+  </section>
+
+  <section aria-labelledby="privacy">
+    <h2 id="privacy">Where your data goes</h2>
+    <p class="dim">The song's title, artist, album and length go to <code>lrclib.net</code>, a free, open lyrics database, to find synced lyrics. Turn lyrics off and even that stops. The sound itself is analysed on your PC for the aurora and never recorded or sent anywhere. No accounts, no analytics, no telemetry.</p>
+  </section>
+
+  <footer>
+    <span>Engineered by Ritesh Roshan</span>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="https://github.com/riteshroshann/music-notch/issues">Report a bug</a></span>
+  </footer>
+</main>
+
+<script>
+  // Scale the 900px widget down to fit narrow screens.
+  const stage = document.getElementById("stage");
+  const fit = () => stage.style.setProperty("--k", Math.min(1, stage.clientWidth / 900).toFixed(3));
+  addEventListener("resize", fit);
+  fit();
+</script>
+</body>
+</html>
