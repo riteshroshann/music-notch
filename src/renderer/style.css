@@ -494,3 +494,22 @@ body.demo .island {
   filter: blur(18px) saturate(1.6);
   opacity: 0.75;
 }
+
+/* lyrics toggle and the power button share the top-right corner */
+.head-r {
+  display: flex;
+  gap: 8px;
+  align-self: flex-start;
+}
+.round.quit svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.7;
+  stroke: var(--dim);
+}
+.round.quit:hover {
+  background: rgba(255, 105, 97, 0.18);
+}
+.round.quit:hover svg {
+  stroke: #ff6961;
+}

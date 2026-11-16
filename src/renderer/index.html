@@ -23,9 +23,14 @@
       <div class="head">
         <span class="art lg" id="artLg"></span>
         <div class="meta"><b id="title"></b><span id="artist"></span></div>
-        <span class="round" role="button" tabindex="0" id="lyricsBtn" aria-pressed="true" aria-label="Synced lyrics" title="Synced lyrics">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h11M4 17.5h7"/><circle cx="18.5" cy="17" r="2.2"/><path d="M20.7 17V10.5"/></svg>
-        </span>
+        <div class="head-r">
+          <span class="round" role="button" tabindex="0" id="lyricsBtn" aria-pressed="true" aria-label="Synced lyrics" title="Synced lyrics">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h11M4 17.5h7"/><circle cx="18.5" cy="17" r="2.2"/><path d="M20.7 17V10.5"/></svg>
+          </span>
+          <span class="round quit" role="button" tabindex="0" id="quit" aria-label="Quit Music Notch" title="Quit Music Notch">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v5.5M4.4 3.6a5.5 5.5 0 1 0 7.2 0"/></svg>
+          </span>
+        </div>
       </div>
       <div class="lyrics" id="lyrics" aria-live="polite"><p class="now" id="lyNow"></p><p class="next" id="lyNext"></p></div>
       <div class="controls">

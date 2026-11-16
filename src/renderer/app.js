@@ -192,6 +192,10 @@ island.addEventListener("click", (e) => {
   if (!isOpen) setOpen(true);
 });
 $("grab").addEventListener("click", () => setOpen(false));
+$("quit").addEventListener("click", () => {
+  Sound.play("close");
+  setTimeout(() => bridge.quit(), 220);
+});
 
 // ---------- controls ----------
 /** @param {string} cmd */
