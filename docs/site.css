@@ -5,7 +5,7 @@
   --dim: #98989f;
   --line: rgba(255, 255, 255, 0.09);
   --raise: #0c0c0e;
-  --accent: #3ef2b0;
+  --accent: #ff9a2e;
   --sans: "Inter", -apple-system, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
   --mono: "JetBrains Mono", "Cascadia Code", ui-monospace, Consolas, monospace;
   color-scheme: dark;
@@ -37,7 +37,7 @@ button:focus-visible {
   border-radius: 6px;
 }
 ::selection {
-  background: rgba(62, 242, 176, 0.3);
+  background: rgba(255, 154, 46, 0.3);
 }
 code,
 pre {
@@ -209,7 +209,7 @@ ol.steps li::before {
   place-items: center;
   font: 600 13px var(--sans);
   color: var(--accent);
-  box-shadow: inset 0 0 0 1px rgba(62, 242, 176, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 154, 46, 0.4);
 }
 ol.steps p {
   margin: 2px 0 0;
@@ -404,5 +404,141 @@ th {
   }
   .btn {
     transition: none;
+  }
+}
+
+/* ---------- finish: room to breathe, ghosts, reflection ---------- */
+:root {
+  --spark: #ff9a2e;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+.wrap {
+  max-width: 1080px;
+}
+section {
+  padding-block: clamp(72px, 10vw, 140px);
+}
+.hero {
+  padding-block: clamp(56px, 8vw, 120px) clamp(48px, 6vw, 88px);
+}
+.lede {
+  max-width: 52ch;
+  margin-inline: auto;
+}
+.actions {
+  margin-top: 40px;
+}
+.islands {
+  gap: 48px;
+}
+.steps li {
+  padding-block: 18px;
+}
+
+/* the live player stands on glass: a soft reflection under it */
+.stage iframe {
+  -webkit-box-reflect: below -8px linear-gradient(transparent 62%, rgba(0, 0, 0, 0.22));
+}
+
+/* hero ghost: a blurred aurora-coloured echo of the headline, breathing slowly */
+.hero-grid {
+  position: relative;
+}
+.hero-ghost {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  font: inherit;
+  font-size: inherit;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: inherit;
+  text-align: center;
+  color: var(--spark);
+  filter: blur(30px);
+  opacity: 0.16;
+  pointer-events: none;
+  animation: ghost-breathe 9s ease-in-out infinite;
+}
+.hero-grid h1 {
+  position: relative;
+  z-index: 1;
+}
+.hero-grid .hero-ghost {
+  font-size: clamp(44px, 7vw, 88px);
+  line-height: 1.02;
+}
+@keyframes ghost-breathe {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translate(0, 6px) scale(1);
+  }
+  50% {
+    opacity: 0.22;
+    transform: translate(10px, -4px) scale(1.015);
+  }
+}
+
+/* ghost strip: the players it works with, still and grey until you point at one */
+.ghost-sec {
+  padding-block: 24px clamp(48px, 7vw, 96px);
+}
+.ghost-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dim);
+  margin: 0 0 20px;
+  letter-spacing: 0;
+}
+.ghost-row {
+  list-style: none;
+  margin: 0;
+  padding: 28px 0 8px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px 44px;
+}
+.ply {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0.42;
+  cursor: default;
+  transition: opacity 0.45s var(--ease), color 0.45s var(--ease), transform 0.45s var(--ease);
+}
+.ghost-name {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.ghost-role {
+  font-size: 12px;
+  color: var(--dim);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+}
+.ghost-row:hover .ply {
+  opacity: 0.22;
+}
+.ghost-row .ply:hover {
+  opacity: 1;
+  color: var(--brand);
+  transform: translateY(-2px);
+}
+.ghost-row .ply:hover .ghost-role {
+  opacity: 1;
+  transform: none;
+}
+.ghost-tm {
+  margin-top: 18px;
+  font-size: 12.5px;
+  color: var(--dim);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-ghost {
+    animation: none;
   }
 }

@@ -20,7 +20,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="site.css?v=5">
+<link rel="stylesheet" href="site.css?v=6">
 <style>
   .stage { height: calc(280px * var(--k, 1) + 56px); }
   .stage iframe { width: 640px; height: 280px; }
@@ -29,13 +29,16 @@
 <body>
 
 <div class="stage" id="stage">
-  <iframe src="demo/index.html?demo&v=6" title="Live Music Notch demo with made-up songs" loading="eager"></iframe>
+  <iframe src="demo/index.html?demo&v=7" title="Live Music Notch demo with made-up songs" loading="eager"></iframe>
   <p class="stage-hint">This is the real thing on made-up songs. It's watching your cursor. Click it, then skip, scrub, pause.</p>
 </div>
 
 <main class="wrap">
   <header class="hero">
-    <h1>Whatever you're playing, hanging from the top of your screen.</h1>
+    <div class="hero-grid">
+      <span class="hero-ghost" aria-hidden="true">Whatever you're playing, hanging from the top of your screen.</span>
+      <h1 class="hero-h1">Whatever you're playing, hanging from the top of your screen.</h1>
+    </div>
     <p class="lede">A tiny black bubble with a face. It watches your cursor, dozes when the music stops, and opens into a player that glows in the colours of the cover, on every beat.</p>
     <div class="actions">
       <a class="btn primary" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.exe">
@@ -46,6 +49,21 @@
     </div>
     <p class="fine">Windows 10 and 11 · free and open source · <a href="https://github.com/riteshroshann/music-notch">source on GitHub</a></p>
   </header>
+
+  <section class="ghost-sec" aria-labelledby="works">
+    <h2 id="works" class="ghost-title">Works with what you already play in</h2>
+    <ul class="ghost-row">
+      <li class="ply" style="--brand:#1db954"><span class="ghost-name">Spotify</span><span class="ghost-role">App</span></li>
+      <li class="ply" style="--brand:#fa243c"><span class="ghost-name">Apple Music</span><span class="ghost-role">App</span></li>
+      <li class="ply" style="--brand:#ff0033"><span class="ghost-name">YouTube</span><span class="ghost-role">Any browser</span></li>
+      <li class="ply" style="--brand:#4285f4"><span class="ghost-name">Chrome</span><span class="ghost-role">Browser</span></li>
+      <li class="ply" style="--brand:#0f9ee8"><span class="ghost-name">Edge</span><span class="ghost-role">Browser</span></li>
+      <li class="ply" style="--brand:#fb542b"><span class="ghost-name">Brave</span><span class="ghost-role">Browser</span></li>
+      <li class="ply" style="--brand:#ff7139"><span class="ghost-name">Firefox</span><span class="ghost-role">Browser</span></li>
+      <li class="ply" style="--brand:#33ffee"><span class="ghost-name">TIDAL</span><span class="ghost-role">App</span></li>
+    </ul>
+    <p class="ghost-tm">Anything that shows up in Windows' own media controls works. Names belong to their owners; Music Notch is not affiliated with any of them.</p>
+  </section>
 
   <section aria-labelledby="what">
     <h2 id="what">What it does</h2>

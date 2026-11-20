@@ -478,6 +478,8 @@ requestAnimationFrame(frame);
 if (params.has("shot")) document.body.style.background = "linear-gradient(#26262b, #0f0f12)";
 if (params.has("demo")) {
   document.body.classList.add("demo");
+  // say hi as the pet first, then open up so visitors see the player
+  setTimeout(() => !isOpen && setOpen(true), 2200);
 }
 
 /** Titles and lyrics come from other apps and the network; keep them as text. @param {string} s */
