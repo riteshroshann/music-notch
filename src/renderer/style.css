@@ -710,3 +710,40 @@ body.demo .island {
 .ctl.jump svg {
   transition: rotate 300ms var(--spring, ease), stroke 160ms ease;
 }
+
+/* scrubber: a thin track, a solid fill up to the playhead, and a knob that shows up when you reach for it */
+.track::before {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: height 260ms var(--spring, ease);
+}
+.fill {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 calc(4px + 8px * var(--glow, 0)) rgba(255, 255, 255, calc(0.25 + 0.35 * var(--glow, 0)));
+  transition: height 260ms var(--spring, ease);
+}
+.thumb {
+  left: calc(var(--p) * 100%);
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  scale: 0;
+  transition: scale 280ms var(--spring, ease);
+}
+.track:hover::before,
+.track:hover .fill,
+.track.drag::before,
+.track.drag .fill {
+  height: 6px;
+}
+.track:hover .thumb,
+.track.drag .thumb {
+  height: 12px;
+  scale: 1;
+}
+.track.drag .thumb {
+  scale: 1.2;
+}
