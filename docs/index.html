@@ -4,118 +4,200 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Music Notch</title>
-<meta name="description" content="Whatever you're playing, hanging from the top of your Windows screen: controls, synced lyrics, and an aurora that moves to the beat. Free and open source.">
+<meta name="description" content="Whatever you're playing, hanging from the top of your Windows screen. Free and open source.">
 <meta name="author" content="Ritesh Roshan">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://riteshroshann.github.io/music-notch/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="Music Notch">
-<meta property="og:description" content="Whatever you're playing, hanging from the top of your Windows screen, with an aurora that moves to the beat.">
+<meta property="og:description" content="Whatever you're playing, hanging from the top of your Windows screen.">
 <meta property="og:image" content="https://riteshroshann.github.io/music-notch/og.png">
 <meta property="og:url" content="https://riteshroshann.github.io/music-notch/">
 <meta name="twitter:card" content="summary_large_image">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; frame-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&display=swap">
 <style>
-  .stage { height: calc(280px * var(--k, 1) + 56px); }
-  .stage iframe { width: 640px; height: 280px; }
+  :root {
+    --ink: #0d1117;
+    --dim: rgba(13, 17, 23, 0.55);
+    --ghost: rgba(13, 17, 23, 0.07);
+    --ease: cubic-bezier(0.32, 0.72, 0, 1);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: var(--ink); }
+  body {
+    font: 500 16px/1.5 "Inter", -apple-system, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: rgba(255, 154, 46, 0.28); }
+  a { color: inherit; }
+  a:focus-visible { outline: 2px solid #ff9a2e; outline-offset: 3px; border-radius: 99px; }
+
+  /* the live widget hangs from the very top, like it does on your screen */
+  .stage { position: relative; height: calc(280px * var(--k, 1)); }
+  .stage iframe {
+    position: absolute; top: 0; left: 50%;
+    width: 640px; height: 280px; border: 0; background: transparent;
+    color-scheme: dark; /* match the widget, or the frame paints an opaque backdrop */
+    transform-origin: 50% 0; transform: translateX(-50%) scale(var(--k, 1));
+  }
+
+  /* hero: huge type over its own bold grey ghost */
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: clamp(40px, 7vw, 96px) 20px clamp(64px, 9vw, 128px);
+  }
+  .ghost-word {
+    position: absolute; left: 50%; top: 52%;
+    translate: -50% -50%;
+    font-size: clamp(120px, 26vw, 420px);
+    font-weight: 800; letter-spacing: -0.06em; line-height: 0.8;
+    color: var(--ghost);
+    white-space: nowrap;
+    pointer-events: none; user-select: none;
+    animation: breathe 9s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { scale: 1; opacity: 0.85; }
+    50% { scale: 1.025; opacity: 1; }
+  }
+  h1 {
+    position: relative;
+    margin: 0 auto;
+    max-width: 12ch;
+    font-size: clamp(52px, 9vw, 136px);
+    font-weight: 800; letter-spacing: -0.055em; line-height: 0.92;
+  }
+  .lede {
+    position: relative;
+    margin: 28px auto 0;
+    font-size: clamp(17px, 1.6vw, 21px);
+    color: var(--dim);
+  }
+  .actions { position: relative; margin-top: 44px; display: flex; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 60px; padding: 0 30px; border-radius: 99px;
+    font-size: 17px; font-weight: 600; text-decoration: none;
+    background: var(--ink); color: #fff;
+    box-shadow: 0 24px 50px -22px rgba(13, 17, 23, 0.55);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  }
+  .btn svg { width: 18px; height: 18px; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 30px 60px -22px rgba(13, 17, 23, 0.6); }
+  .btn:active { transform: scale(0.97); }
+  .fine { position: relative; margin-top: 18px; font-size: 13px; color: var(--dim); }
+
+  /* ghost carousel: bold grey words sliding by, ink when you point at one */
+  .marquee {
+    overflow: hidden;
+    padding-block: clamp(16px, 3vw, 36px);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+  .marquee:hover .track { animation-play-state: paused; }
+  .track span {
+    padding-inline: clamp(20px, 3vw, 44px);
+    font-size: clamp(56px, 10vw, 150px);
+    font-weight: 800; letter-spacing: -0.055em; line-height: 1;
+    color: var(--ghost);
+    white-space: nowrap;
+    transition: color 0.5s var(--ease);
+  }
+  .track span:hover { color: var(--ink); }
+  .marquee.rev .track { animation-direction: reverse; animation-duration: 46s; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* three steps, a few words each */
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    max-width: 1100px; margin: clamp(56px, 8vw, 120px) auto 0; padding: 0 20px;
+    list-style: none;
+  }
+  .steps li { position: relative; padding: 36px 32px; border-radius: 32px; background: #f4f5f7; overflow: hidden; }
+  .steps b {
+    position: absolute; right: 18px; bottom: -28px;
+    font-size: 150px; font-weight: 800; letter-spacing: -0.06em; line-height: 1;
+    color: rgba(13, 17, 23, 0.06);
+  }
+  .steps h2 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.035em; }
+  .steps p { margin: 8px 0 0; color: var(--dim); font-size: 15px; max-width: 26ch; }
+
+  footer {
+    max-width: 1100px; margin: clamp(80px, 11vw, 160px) auto 0; padding: 28px 20px 40px;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    font-size: 13px; color: var(--dim); border-top: 1px solid rgba(13, 17, 23, 0.08);
+  }
+  footer a { text-decoration: none; margin-left: 18px; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .steps { grid-template-columns: 1fr; }
+    footer a { margin: 0 18px 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ghost-word, .track { animation: none; }
+  }
 </style>
 </head>
 <body>
 
 <div class="stage" id="stage">
-  <iframe src="demo/index.html?demo&v=7" title="Live Music Notch demo with made-up songs" loading="eager"></iframe>
-  <p class="stage-hint">This is the real thing on made-up songs. It's watching your cursor. Click it, then skip, scrub, pause.</p>
+  <iframe src="demo/index.html?demo&v=8" title="Live Music Notch demo" loading="eager"></iframe>
 </div>
 
-<main class="wrap">
-  <header class="hero">
-    <div class="hero-grid">
-      <span class="hero-ghost" aria-hidden="true">Whatever you're playing, hanging from the top of your screen.</span>
-      <h1 class="hero-h1">Whatever you're playing, hanging from the top of your screen.</h1>
-    </div>
-    <p class="lede">A tiny black bubble with a face. It watches your cursor, dozes when the music stops, and opens into a player that glows in the colours of the cover, on every beat.</p>
-    <div class="actions">
-      <a class="btn primary" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.exe">
-        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L4.8 10.2a1 1 0 1 1 1.4-1.4L9 11.6V3a1 1 0 0 1 1-1ZM3 16a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Z"/></svg>
-        Download for Windows
-      </a>
-      <a class="btn ghost" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.zip">Portable zip</a>
-    </div>
-    <p class="fine">Windows 10 and 11 · free and open source · <a href="https://github.com/riteshroshann/music-notch">source on GitHub</a></p>
-  </header>
+<header class="hero">
+  <span class="ghost-word" aria-hidden="true">notch</span>
+  <h1>Your music, on top.</h1>
+  <p class="lede">A tiny island with a face. Click it to play.</p>
+  <div class="actions">
+    <a class="btn" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.exe">
+      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 2a1 1 0 0 1 1 1v8.6l2.8-2.8a1 1 0 1 1 1.4 1.4l-4.5 4.5a1 1 0 0 1-1.4 0L4.8 10.2a1 1 0 1 1 1.4-1.4L9 11.6V3a1 1 0 0 1 1-1ZM3 16a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1Z"/></svg>
+      Download for Windows
+    </a>
+  </div>
+  <p class="fine">Free · Windows 10 and 11 · <a href="https://github.com/riteshroshann/music-notch">Open source</a></p>
+</header>
 
-  <section class="ghost-sec" aria-labelledby="works">
-    <h2 id="works" class="ghost-title">Works with what you already play in</h2>
-    <ul class="ghost-row">
-      <li class="ply" style="--brand:#1db954"><span class="ghost-name">Spotify</span><span class="ghost-role">App</span></li>
-      <li class="ply" style="--brand:#fa243c"><span class="ghost-name">Apple Music</span><span class="ghost-role">App</span></li>
-      <li class="ply" style="--brand:#ff0033"><span class="ghost-name">YouTube</span><span class="ghost-role">Any browser</span></li>
-      <li class="ply" style="--brand:#4285f4"><span class="ghost-name">Chrome</span><span class="ghost-role">Browser</span></li>
-      <li class="ply" style="--brand:#0f9ee8"><span class="ghost-name">Edge</span><span class="ghost-role">Browser</span></li>
-      <li class="ply" style="--brand:#fb542b"><span class="ghost-name">Brave</span><span class="ghost-role">Browser</span></li>
-      <li class="ply" style="--brand:#ff7139"><span class="ghost-name">Firefox</span><span class="ghost-role">Browser</span></li>
-      <li class="ply" style="--brand:#33ffee"><span class="ghost-name">TIDAL</span><span class="ghost-role">App</span></li>
-    </ul>
-    <p class="ghost-tm">Anything that shows up in Windows' own media controls works. Names belong to their owners; Music Notch is not affiliated with any of them.</p>
-  </section>
+<div class="marquee" aria-label="Works with Spotify, Apple Music, YouTube, Chrome, Edge, Brave, Firefox and TIDAL">
+  <div class="track" aria-hidden="true">
+    <span>Spotify</span><span>Apple Music</span><span>YouTube</span><span>Chrome</span><span>Edge</span><span>Brave</span><span>Firefox</span><span>TIDAL</span>
+    <span>Spotify</span><span>Apple Music</span><span>YouTube</span><span>Chrome</span><span>Edge</span><span>Brave</span><span>Firefox</span><span>TIDAL</span>
+  </div>
+</div>
+<div class="marquee rev" aria-hidden="true">
+  <div class="track">
+    <span>Lyrics</span><span>Aurora</span><span>Beat</span><span>Pet</span><span>Skip</span><span>Scrub</span>
+    <span>Lyrics</span><span>Aurora</span><span>Beat</span><span>Pet</span><span>Skip</span><span>Scrub</span>
+  </div>
+</div>
 
-  <section aria-labelledby="what">
-    <h2 id="what">What it does</h2>
-    <div class="islands">
-      <div><b>Has a little face</b><p>Closed, the notch is a tiny pet. Its eyes follow your cursor around the screen, it blinks, bobs on the beat, squeezes its eyes happy when you hover and dozes off when you pause.</p></div>
-      <div><b>Knows the song</b><p>Spotify, YouTube in Chrome, Edge, Brave or Firefox, Apple Music, TIDAL, Windows Media Player: anything that shows up in Windows' own media controls shows up here, with its cover art. Nothing playing? The island tucks itself away.</p></div>
-      <div><b>Plays along</b><p>Click it and it springs open into a full player: ten seconds back, previous, pause, next, ten seconds forward, and a glowing scrubber you can drag. Space, left and right arrows work too.</p></div>
-      <div><b>Sings and glows</b><p>Open it and synced lyrics roll by line by line. The aurora inside takes its colours from the cover and listens to the actual sound, so the bass hits are light hits.</p></div>
-    </div>
-  </section>
+<ol class="steps">
+  <li><b>1</b><h2>Install.</h2><p>Windows may warn you. More info, then Run anyway.</p></li>
+  <li><b>2</b><h2>Play.</h2><p>Spotify, a browser, anything. It drops in.</p></li>
+  <li><b>3</b><h2>Click.</h2><p>Right-click for settings. Uninstall from Apps.</p></li>
+</ol>
 
-  <section aria-labelledby="setup">
-    <h2 id="setup">Set it up in thirty seconds</h2>
-    <ol class="steps">
-      <li><div><b>Install</b><p>Run <code>Music-Notch-win.exe</code>. It installs for you alone, needs no admin rights, and starts straight away. Windows may say it protected your PC, because the app isn't code-signed yet. Click <b>More info</b>, then <b>Run anyway</b>.</p></div></li>
-      <li><div><b>Play something</b><p>Hit play in Spotify, or anywhere else. The island drops in from the top of the screen. There's no sign in and nothing to configure.</p></div></li>
-      <li><div><b>Make it yours</b><p>Right-click the island, or the tray icon, to turn the aurora, lyrics, sounds or start-at-login on and off.</p></div></li>
-    </ol>
-  </section>
-
-  <section aria-labelledby="remove">
-    <h2 id="remove">Uninstall</h2>
-    <p class="dim">Open <b>Settings</b>, then <b>Apps</b>, then <b>Installed apps</b>, find <b>Music Notch</b> and choose <b>Uninstall</b>. <b>Uninstall…</b> in the right-click menu takes you straight there. It quits the app and removes it, its start-at-login entry and your settings.</p>
-    <p class="dim">Using the portable zip? Right-click the island, turn off <b>Open at login</b>, quit, then delete the folder.</p>
-  </section>
-
-  <section aria-labelledby="it">
-    <h2 id="it">For IT teams</h2>
-    <p class="dim">Install and remove silently, per user:</p>
-<pre><code>Music-Notch-win.exe /S
-"%LOCALAPPDATA%\Programs\music-notch\Uninstall Music Notch.exe" /S</code></pre>
-  </section>
-
-  <section aria-labelledby="privacy">
-    <h2 id="privacy">Where your data goes</h2>
-    <p class="dim">The song's title, artist, album and length go to <code>lrclib.net</code>, a free, open lyrics database, to find synced lyrics. Turn lyrics off and even that stops. The sound itself is analysed on your PC for the aurora and never recorded or sent anywhere. No accounts, no analytics, no telemetry.</p>
-  </section>
-
-  <footer>
-    <span>Engineered by Ritesh Roshan</span>
-    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="https://github.com/riteshroshann/music-notch/issues">Report a bug</a></span>
-  </footer>
-</main>
+<footer>
+  <span>Engineered by Ritesh Roshan</span>
+  <span><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/riteshroshann/music-notch/issues">Report a bug</a></span>
+</footer>
 
 <script>
-  // Scale the 640px widget down to fit narrow screens.
   const stage = document.getElementById("stage");
-  const fit = () => stage.style.setProperty("--k", Math.min(1, stage.clientWidth / 640).toFixed(3));
+  const frame = stage.querySelector("iframe");
+  const fit = () => stage.style.setProperty("--k", Math.min(1, innerWidth / 640).toFixed(3));
   addEventListener("resize", fit);
   fit();
-  // let the pet in the demo watch the cursor anywhere on the page
-  const frame = stage.querySelector("iframe");
+  // the demo pet watches the cursor anywhere on the page
   addEventListener("pointermove", (e) => {
     const r = frame.getBoundingClientRect();
     const k = r.width / 640;
