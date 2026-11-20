@@ -1,5 +1,5 @@
 // The aurora, drawn inside the island only: light rising from the bottom edge in the cover's
-// colours, with curtains of rays that grow with the music.
+// colours, soft and matte, swelling with the music.
 // Colours come from the cover art; sizes and brightness come from Ears; lyric lines send a wave.
 const Aurora = (() => {
   /** @typedef {[number, number, number]} RGB */
@@ -114,22 +114,6 @@ const Aurora = (() => {
     waveAt = performance.now();
   }
 
-  /** Smooth, wandering 0..1 field across x and time. @param {number} x @param {number} t */
-  function field(x, t) {
-    return (
-      0.5 +
-      0.22 * Math.sin(x * 0.011 + t * 0.00062) +
-      0.13 * Math.sin(x * 0.027 - t * 0.0011 + 1.7) +
-      0.08 * Math.sin(x * 0.061 + t * 0.0019 + 0.4)
-    );
-  }
-
-  /** Fine vertical striations, the rays that make a curtain read as aurora. @param {number} x @param {number} t */
-  function rays(x, t) {
-    const r = Math.sin(x * 0.21 + t * 0.0024) * Math.sin(x * 0.083 - t * 0.0013 + 2.1);
-    return 0.45 + 0.55 * r * r;
-  }
-
   /**
    * Light inside the island, rising from the bottom like the glow behind a lock screen player.
    * @param {HTMLCanvasElement} cv @param {ReturnType<typeof Ears.read>} ears @param {number} t @param {number} level 0 resting .. 1 open
@@ -168,25 +152,6 @@ const Aurora = (() => {
       g.fillStyle = grad;
       g.fillRect(0, 0, w, h);
     }
-
-    // curtains rising from the bottom edge, tallest where the music is loudest
-    const loud = 0.3 + ears.energy * 1.3 + ears.beat * 0.4;
-    const step = 3;
-    g.filter = "blur(5px)";
-    for (let x = -6; x <= w + 6; x += step) {
-      const n = field(x, t) * rays(x, t);
-      const band = ears.bands[Math.min(4, Math.max(0, Math.floor((x / w) * 5)))] ?? 0;
-      const wv = waveX > -1e3 ? Math.exp(-(((x - waveX) / 60) ** 2)) : 0;
-      const len = h * (0.18 + 0.5 * n * loud + 0.35 * band + 0.3 * wv) * (0.6 + 0.4 * level);
-      const c = /** @type {RGB} */ (colour[Math.floor(((x * 0.004 + t * 0.00007) % 3) + 3) % 3]);
-      const a = (0.08 + 0.38 * n * loud + 0.3 * wv) * (0.45 + 0.55 * level);
-      const grad = g.createLinearGradient(0, h, 0, h - len);
-      grad.addColorStop(0, rgba(c, a));
-      grad.addColorStop(1, rgba(c, 0));
-      g.fillStyle = grad;
-      g.fillRect(x, h - len, step + 1, len);
-    }
-    g.filter = "none";
   }
 
   return { paletteFrom, wave, bloom, blend, colours: () => colour };

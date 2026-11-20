@@ -190,10 +190,9 @@ function setOpen(open) {
 }
 
 island.addEventListener("click", (e) => {
-  if (/** @type {HTMLElement} */ (e.target).closest(".ctl, .track, .round, .grab")) return;
+  if (/** @type {HTMLElement} */ (e.target).closest(".ctl, .track, .round")) return;
   if (!isOpen) setOpen(true);
 });
-$("grab").addEventListener("click", () => setOpen(false));
 $("quit").addEventListener("click", () => {
   Sound.play("close");
   setTimeout(() => bridge.quit(), 220);
@@ -337,6 +336,7 @@ function render(s) {
   island.setAttribute("aria-label", `Now playing: ${s.title}${s.artist ? ` by ${s.artist}` : ""}`);
   $("prev").classList.toggle("off", !s.canPrev);
   $("next").classList.toggle("off", !s.canNext);
+  for (const id of ["back10", "fwd10"]) $(id).classList.toggle("off", !s.canSeek || !s.duration);
   track.classList.toggle("locked", !s.canSeek);
   $("tEnd").textContent = fmtTime(s.duration);
   island.querySelector(".progress")?.classList.toggle("none", !s.duration);
@@ -484,3 +484,15 @@ if (params.has("demo")) {
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
 }
+
+/** Jump within the song, answering on screen at once. @param {number} ms */
+function jump(ms) {
+  if (!now?.canSeek || !now.duration) return;
+  const to = Math.min(now.duration, Math.max(0, position() + ms));
+  now = { ...now, position: to, updated: Date.now() };
+  lineIdx = -2;
+  Sound.play("page");
+  bridge.control("seek", to);
+}
+$("back10").addEventListener("click", () => jump(-10000));
+$("fwd10").addEventListener("click", () => jump(10000));
