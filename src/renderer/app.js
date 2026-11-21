@@ -283,7 +283,7 @@ track.addEventListener("keydown", (e) => {
 island.addEventListener("pointerenter", () => {
   if (!isOpen) {
     Motion.press(shell, 1.035);
-    Motion.jelly(island, 0.7);
+    Motion.jelly(shell, 0.7);
     Sound.play("hover");
   }
 });
@@ -326,7 +326,7 @@ function render(s) {
   if (!prev && !params.has("shot")) Motion.intro([shell]);
   if (prev && keyOf(prev) !== keyOf(s)) {
     Pet.mood("wow", 900);
-    Motion.jelly(island, 0.6);
+    Motion.jelly(shell, 0.6);
     Motion.pop([$("artLg"), $("title"), $("artist")]);
   }
   island.classList.toggle("playing", s.playing);

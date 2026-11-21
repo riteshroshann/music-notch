@@ -142,6 +142,17 @@
   footer a { text-decoration: none; margin-left: 18px; }
   footer a:hover { color: var(--ink); }
 
+  /* splash: a white cover with the dot-matrix triangle until fonts and first paint are ready */
+  .splash {
+    position: fixed; inset: 0; z-index: 50;
+    display: grid; place-items: center;
+    background: #fff; color: var(--ink);
+    transition: opacity 0.5s var(--ease), visibility 0s linear 0.5s;
+  }
+  .splash.gone { opacity: 0; visibility: hidden; }
+  .dmx { display: grid; grid-template-columns: repeat(7, 7px); gap: 1px; }
+  .dmx i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0; }
+
   @media (max-width: 760px) {
     .steps { grid-template-columns: 1fr; }
     footer a { margin: 0 18px 0 0; }
@@ -152,6 +163,7 @@
 </style>
 </head>
 <body>
+<div class="splash" id="splash"><div class="dmx" id="dmx" role="status" aria-live="polite" aria-label="Loading"></div></div>
 
 <div class="stage" id="stage">
   <iframe src="demo/index.html?demo&v=8" title="Live Music Notch demo" loading="eager" onload="this.classList.add('ready')"></iframe>
@@ -191,10 +203,44 @@
 
 <footer>
   <span>Engineered by Ritesh Roshan</span>
-  <span><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/riteshroshann/music-notch/issues">Report a bug</a></span>
+  <span><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="bug.html">Report a bug</a></span>
 </footer>
 
 <script>
+  // DotmTriangle16 from the @dotmatrix registry (MIT), ported to plain JS: a V-shaped front of light
+  // rides up a 10-dot triangle and meets at the apex.
+  (() => {
+    const root = document.getElementById("dmx");
+    const cells = new Set(["1,3", "2,2", "2,4", "3,1", "3,3", "3,5", "4,0", "4,2", "4,4", "4,6"]);
+    const dots = [];
+    for (let i = 0; i < 49; i++) {
+      const d = document.createElement("i");
+      root.append(d);
+      const r = Math.floor(i / 7), c = i % 7;
+      if (cells.has(r + "," + c)) dots.push([d, r, c]);
+    }
+    const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+    const level = (r, c, p) => {
+      const v = r - 0.52 * Math.abs(c - 3);
+      const d = Math.abs(v - (1.85 + 1.4 * Math.sin(p * Math.PI * 2)));
+      const glow = smooth(0.04, 0.98, Math.exp(-(d * d) / (0.88 * 0.88)));
+      let o = 0.1 + glow * 0.86;
+      if (r === 3 && c === 3) o = Math.max(o, 0.36 * 0.58 + glow * 0.6 * 0.48);
+      return Math.min(0.96, o);
+    };
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const splash = document.getElementById("splash");
+    const cycle = 2400 / 1.55;
+    const tick = (t) => {
+      const p = still ? 0.12 : (t % cycle) / cycle;
+      for (const [d, r, c] of dots) d.style.opacity = level(r, c, p).toFixed(3);
+      if (!splash.classList.contains("gone") && !still) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    const min = new Promise((r) => setTimeout(r, 700));
+    Promise.all([document.fonts.ready, min]).then(() => splash.classList.add("gone"));
+  })();
+
   const stage = document.getElementById("stage");
   const frame = stage.querySelector("iframe");
   const fit = () => stage.style.setProperty("--k", Math.min(1, innerWidth / 640).toFixed(3));

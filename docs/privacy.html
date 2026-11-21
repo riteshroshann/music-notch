@@ -3,49 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Privacy policy · Music Notch</title>
-<meta name="description" content="What Music Notch collects (nothing), what it keeps on your PC, and who it talks to.">
+<title>Privacy · Music Notch</title>
+<meta name="description" content="What Music Notch reads, keeps and sends. Short version: nothing about you.">
 <meta name="author" content="Ritesh Roshan">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="https://riteshroshann.github.io/music-notch/privacy.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="site.css?v=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="page.css?v=1">
 </head>
 <body>
-<main class="wrap" style="padding-block: 72px 0">
-  <p><a href="./">Music Notch</a></p>
-  <h1 style="font-size: 44px; text-align: left; margin-top: 32px">Privacy policy</h1>
-  <p class="dim">Last updated 16 November 2026</p>
-  <section>
-    <h2>The short version</h2>
-    <p class="dim">Music Notch has no servers, no accounts, no analytics and no telemetry. Nothing about you is sent to the person who made it.</p>
-  </section>
-  <section>
-    <h2>What it reads on your PC</h2>
-    <p class="dim">The title, artist, album, cover art and position of whatever is playing, from Windows' own media controls, the same information the volume flyout shows. To make the aurora move to the music, it listens to your PC's sound output and turns it into a handful of loudness numbers many times a second. That sound is never recorded, saved or sent anywhere.</p>
-  </section>
-  <section>
-    <h2>What stays on your PC</h2>
-    <p class="dim">Your settings and a small log file, in <code>%APPDATA%\Music Notch</code>. Uninstalling deletes them.</p>
-  </section>
-  <section>
-    <h2>Who it talks to</h2>
-    <p class="dim"><b>LRCLIB</b> (<code>lrclib.net</code>), a free and open lyrics database, receives the title, artist, album and length of each song so it can return synced lyrics. Turn off <b>Synced lyrics</b> in the right-click menu and Music Notch makes no network requests at all.</p>
-    <p class="dim"><b>Google Fonts</b> serves the typeface on this website.</p>
-  </section>
-  <section>
-    <h2>Questions</h2>
-    <p class="dim">Open an issue on <a href="https://github.com/riteshroshann/music-notch/issues">GitHub</a> or email riteshroshansahoo01@gmail.com.</p>
-  </section>
-  <footer>
-    <span>Engineered by Ritesh Roshan</span>
-    <span><a href="./">Home</a> · <a href="terms.html">Terms</a></span>
-  </footer>
+<nav class="top"><a class="home" href="./"><img src="favicon.svg" alt="">Music Notch</a><a class="pill" href="https://github.com/riteshroshann/music-notch/releases/latest/download/Music-Notch-win.exe">Download</a></nav>
+<header class="head"><span class="ghost-word" aria-hidden="true">privacy</span><h1>Nothing about you leaves.</h1><p class="date">Last updated 20 November 2026</p></header>
+<main>
+<section><h2>The short version.</h2><p>No accounts, no servers, no analytics, no telemetry. Nothing is sent to the person who made it.</p></section>
+<section><h2>What it reads.</h2><p>The song that is playing, its cover and position, from Windows' own media controls. To move the aurora, it listens to your PC's sound as a few loudness numbers per frame. <b>Nothing is recorded or saved.</b></p></section>
+<section><h2>What it keeps.</h2><p>Your settings and a small log in <code>%APPDATA%\Music Notch</code>. Uninstalling deletes both.</p></section>
+<section><h2>Who it talks to.</h2><p><b>LRCLIB</b> (<code>lrclib.net</code>), an open lyrics database, gets the song's title, artist, album and length to find lyrics. Turn off <b>Synced lyrics</b> and the app makes no network requests at all.</p></section>
+<section><h2>Questions.</h2><p>Email riteshroshansahoo01@gmail.com or <a href="bug.html">open an issue</a>.</p></section>
 </main>
+<footer>
+  <span>Engineered by Ritesh Roshan</span>
+  <span><a href="./">Home</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="bug.html">Report a bug</a></span>
+</footer>
 </body>
 </html>
