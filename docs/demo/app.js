@@ -30,50 +30,59 @@ function demoBridge() {
     for (let i = 0; i < 6; i++) g.fillRect(0, 168 + i * 13, 240, 5 - i * 0.6);
     return c.toDataURL("image/jpeg", 0.9);
   };
+  // Real songs; lyrics come live from LRCLIB by track id, the same source the app uses,
+  // so none are stored here. Covers are painted in each song's colours, not the real art.
   const songs = [
     {
-      title: "where the light pools",
-      artist: "Saffron Hours, Low Tide Club",
-      album: "Late Bloom",
-      duration: 163000,
-      art: () => cover(["#f6b73c", "#e2702a", "#5b1f12"], "rgba(255,240,190,.95)"),
-      words: [
-        "",
-        "golden hour on the kitchen floor",
-        "you said stay a little more",
-        "light pools where your shadow was",
-        "and I'm humming just because",
-        "",
-        "where the light pools, I'll be there",
-        "sunlight caught up in your hair",
-      ],
+      title: "Iris",
+      artist: "The Goo Goo Dolls",
+      album: "Dizzy Up the Girl",
+      duration: 290000,
+      lrclib: 8008355,
+      art: () => cover(["#d9c7a8", "#8a6f52", "#2b2119"], "rgba(255,236,200,.85)"),
     },
     {
-      title: "it hums in blue",
-      artist: "Night Index, Mareo",
-      album: "Signal",
-      duration: 126000,
-      art: () => cover(["#0a1b3f", "#1f5fd1", "#7cc6ff"], "rgba(190,230,255,.9)"),
-      words: [
-        "",
-        "static on the window glass",
-        "city lights that never pass",
-        "it hums in blue, it hums in blue",
-        "every signal leads to you",
-      ],
+      title: "I'd Rather Pretend",
+      artist: "Bryant Barnes",
+      album: "I'd Rather Pretend",
+      duration: 185000,
+      lrclib: 11093800,
+      art: () => cover(["#0b1a3a", "#2a5bd7", "#9cc8ff"], "rgba(200,230,255,.85)"),
     },
     {
-      title: "velvet satellites",
-      artist: "Ana Mirelle",
-      album: "Orbit Songs",
-      duration: 201000,
-      art: () => cover(["#2a0838", "#b0249b", "#ff7ab8"], "rgba(255,200,240,.9)"),
-      words: ["", "we were velvet satellites", "falling slow through neon nights", "hold the line and hold it tight"],
+      title: "Apollo",
+      artist: "Bryant Barnes",
+      album: "Apollo",
+      duration: 215000,
+      lrclib: 34563710,
+      art: () => cover(["#2a0b2e", "#a8326e", "#ffb38a"], "rgba(255,210,190,.85)"),
     },
   ];
+  /** @type {Map<number, { t: number, text: string }[] | null>} */
+  const lyricCache = new Map();
+  /** @param {string} lrc */
+  const parse = (lrc) =>
+    lrc
+      .split(/\r?\n/)
+      .map((l) => /^\[(\d+):(\d+(?:\.\d+)?)\](.*)$/.exec(l))
+      .filter((m) => m !== null)
+      .map((m) => ({ t: Math.round((Number(m[1]) * 60 + Number(m[2])) * 1000), text: (m[3] ?? "").trim() }));
+  /** @param {number} id */
+  async function fetchLines(id) {
+    if (lyricCache.has(id)) return lyricCache.get(id) ?? null;
+    try {
+      const r = await fetch(`https://lrclib.net/api/get/${id}`);
+      const j = r.ok ? await r.json() : null;
+      const lines = j?.syncedLyrics ? parse(j.syncedLyrics) : null;
+      lyricCache.set(id, lines);
+      return lines;
+    } catch {
+      return null;
+    }
+  }
   let i = 0;
   let playing = true;
-  let position = 11000;
+  let position = 52000;
   let updated = Date.now();
   const emit = () => {
     const s = /** @type {(typeof songs)[number]} */ (songs[i]);
@@ -94,11 +103,8 @@ function demoBridge() {
   const load = () => {
     const s = /** @type {(typeof songs)[number]} */ (songs[i]);
     handlers.art?.({ key: s.title, src: s.art() });
-    handlers.lyrics?.({
-      key: `${s.title}\u0000${s.artist}`,
-      lines: s.words.map((text, k) => ({ t: k * 4200, text })),
-      plain: null,
-    });
+    const key = `${s.title}\u0000${s.artist}`;
+    fetchLines(s.lrclib).then((lines) => handlers.lyrics?.({ key, lines, plain: null }));
   };
   const now = () => position + (playing ? Date.now() - updated : 0);
   setTimeout(() => {

@@ -6,52 +6,189 @@
   --ease: cubic-bezier(0.32, 0.72, 0, 1);
   color-scheme: light;
 }
-* { box-sizing: border-box; }
-html, body { margin: 0; background: #fff; color: var(--ink); }
+* {
+  box-sizing: border-box;
+}
+html,
 body {
-  font: 500 16px/1.65 "Inter", -apple-system, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  margin: 0;
+  background: #fff;
+  color: var(--ink);
+}
+body {
+  font: 500 16px / 1.65 "Inter", -apple-system, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-::selection { background: rgba(255, 154, 46, 0.28); }
-a { color: inherit; text-underline-offset: 3px; }
-a:focus-visible { outline: 2px solid #ff9a2e; outline-offset: 3px; border-radius: 8px; }
-.top { max-width: 1100px; margin: 0 auto; padding: 28px 20px; display: flex; justify-content: space-between; align-items: center; }
-.home { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; letter-spacing: -0.02em; }
-.home img { width: 28px; height: 28px; border-radius: 9px; }
+::selection {
+  background: rgba(255, 154, 46, 0.28);
+}
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+a:focus-visible {
+  outline: 2px solid #ff9a2e;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.top {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.home {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.home img {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+}
 .pill {
-  display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 99px;
-  background: var(--ink); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
   transition: transform 0.4s var(--ease);
 }
-.pill:hover { transform: translateY(-2px); }
-.pill:active { transform: scale(0.97); }
-.pill.quiet { background: #f4f5f7; color: var(--ink); }
-.head { position: relative; max-width: 1100px; margin: 0 auto; padding: clamp(48px, 8vw, 120px) 20px clamp(40px, 6vw, 80px); }
+.pill:hover {
+  transform: translateY(-2px);
+}
+.pill:active {
+  transform: scale(0.97);
+}
+.pill.quiet {
+  background: #f4f5f7;
+  color: var(--ink);
+}
+.head {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(48px, 8vw, 120px) 20px clamp(40px, 6vw, 80px);
+}
 .ghost-word {
-  position: absolute; right: 0; top: 50%; translate: 0 -50%;
-  font-size: clamp(110px, 22vw, 340px); font-weight: 800; letter-spacing: -0.06em; line-height: 0.8;
-  color: var(--ghost); white-space: nowrap; pointer-events: none; user-select: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  font-size: clamp(110px, 22vw, 340px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  color: var(--ghost);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
   animation: breathe 9s ease-in-out infinite;
 }
-@keyframes breathe { 50% { scale: 1.02; opacity: 0.8; } }
-h1 { position: relative; margin: 0; font-size: clamp(48px, 8vw, 112px); font-weight: 800; letter-spacing: -0.055em; line-height: 0.95; }
-.date { position: relative; margin-top: 16px; color: var(--dim); font-size: 14px; }
-main { max-width: 760px; margin: 0 auto; padding: 0 20px; }
-section { padding-block: 28px; border-top: 1px solid rgba(13, 17, 23, 0.08); }
-h2 { margin: 0 0 8px; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
-p { margin: 0 0 10px; color: var(--dim); font-size: 16px; }
-p b { color: var(--ink); font-weight: 600; }
-code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.88em; background: #f4f5f7; border-radius: 6px; padding: 0.12em 0.4em; color: var(--ink); }
-.cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-.center { text-align: center; }
-.center .ghost-word { right: auto; left: 50%; translate: -50% -50%; }
-footer {
-  max-width: 1100px; margin: clamp(72px, 10vw, 140px) auto 0; padding: 28px 20px 40px;
-  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  font-size: 13px; color: var(--dim); border-top: 1px solid rgba(13, 17, 23, 0.08);
+@keyframes breathe {
+  50% {
+    scale: 1.02;
+    opacity: 0.8;
+  }
 }
-footer a { text-decoration: none; margin-left: 18px; }
-footer a:hover { color: var(--ink); }
-@media (max-width: 640px) { footer a { margin: 0 18px 0 0; } }
-@media (prefers-reduced-motion: reduce) { .ghost-word { animation: none; } }
+h1 {
+  position: relative;
+  margin: 0;
+  font-size: clamp(48px, 8vw, 112px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+.date {
+  position: relative;
+  margin-top: 16px;
+  color: var(--dim);
+  font-size: 14px;
+}
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+section {
+  padding-block: 28px;
+  border-top: 1px solid rgba(13, 17, 23, 0.08);
+}
+h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+p {
+  margin: 0 0 10px;
+  color: var(--dim);
+  font-size: 16px;
+}
+p b {
+  color: var(--ink);
+  font-weight: 600;
+}
+code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.88em;
+  background: #f4f5f7;
+  border-radius: 6px;
+  padding: 0.12em 0.4em;
+  color: var(--ink);
+}
+.cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.center {
+  text-align: center;
+}
+.center .ghost-word {
+  right: auto;
+  left: 50%;
+  translate: -50% -50%;
+}
+footer {
+  max-width: 1100px;
+  margin: clamp(72px, 10vw, 140px) auto 0;
+  padding: 28px 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--dim);
+  border-top: 1px solid rgba(13, 17, 23, 0.08);
+}
+footer a {
+  text-decoration: none;
+  margin-left: 18px;
+}
+footer a:hover {
+  color: var(--ink);
+}
+@media (max-width: 640px) {
+  footer a {
+    margin: 0 18px 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ghost-word {
+    animation: none;
+  }
+}
